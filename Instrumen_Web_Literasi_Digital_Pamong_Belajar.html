@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Instrumen Self-Assessment Literasi Digital Pamong Belajar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1E2761;
+    --navy-deep:#131A45;
+    --teal:#0F7B6C;
+    --teal-light:#E4F3F0;
+    --ice:#CADCFC;
+    --paper:#F6F7FB;
+    --card:#FFFFFF;
+    --ink:#1B1D2A;
+    --ink-soft:#5B5F72;
+    --line:#DFE2EE;
+    --amber:#B8862E;
+    --red:#A3402F;
+    --shadow: 0 10px 30px -14px rgba(19,26,69,0.22);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:36px 20px 80px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:500;
+    margin-bottom:10px;
+  }
+  h1.title{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(28px,4.4vw,42px);
+    line-height:1.08;
+    color:var(--navy-deep);
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+  .subtitle{
+    font-size:15.5px;
+    color:var(--ink-soft);
+    max-width:640px;
+    line-height:1.55;
+    margin:0 0 28px;
+  }
+
+  /* Progress rail */
+  .rail{
+    display:flex;
+    align-items:center;
+    gap:0;
+    margin-bottom:34px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 18px;
+    box-shadow:var(--shadow);
+    overflow-x:auto;
+  }
+  .rail-step{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+  .rail-dot{
+    width:26px;height:26px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;font-weight:500;
+    border:1.5px solid var(--line);
+    color:var(--ink-soft);
+    background:var(--paper);
+    flex-shrink:0;
+    transition:all .25s ease;
+  }
+  .rail-label{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    font-weight:500;
+    white-space:nowrap;
+  }
+  .rail-step.active .rail-dot{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .rail-step.active .rail-label{color:var(--navy-deep);font-weight:700;}
+  .rail-step.done .rail-dot{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .rail-step.done .rail-label{color:var(--teal);}
+  .rail-connector{
+    width:22px;height:1.5px;background:var(--line);
+    margin:0 6px;
+    flex-shrink:0;
+  }
+
+  /* Cards / panels */
+  .panel{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:32px;
+    animation:fadein .35s ease;
+  }
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  @media (max-width:600px){ .panel{padding:22px 18px;} }
+
+  /* Intro / identity form */
+  .field-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px 18px; margin-top:6px; }
+  @media (max-width:600px){ .field-grid{grid-template-columns:1fr;} }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:12.5px; font-weight:600; color:var(--navy-deep); }
+  .field input, .field select{
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    padding:10px 12px;
+    border-radius:9px;
+    border:1.5px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    outline:none;
+    transition:border-color .2s;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--teal); background:#fff; }
+
+  .intro-note{
+    background:var(--teal-light);
+    border:1px solid #C6E6DF;
+    border-radius:12px;
+    padding:16px 18px;
+    font-size:13.6px;
+    color:#0C5347;
+    line-height:1.6;
+    margin-top:22px;
+  }
+  .intro-note b{ color:var(--teal); }
+
+  .scale-legend{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:18px;
+  }
+  @media (max-width:640px){ .scale-legend{grid-template-columns:1fr 1fr;} }
+  .scale-chip{
+    border:1.5px solid var(--line);
+    border-radius:11px;
+    padding:12px 12px;
+    background:var(--paper);
+  }
+  .scale-chip .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px; color:var(--teal); font-weight:600;
+  }
+  .scale-chip .lbl{ font-size:13px; font-weight:700; color:var(--navy-deep); margin-top:2px;}
+  .scale-chip .desc{ font-size:11.6px; color:var(--ink-soft); margin-top:4px; line-height:1.4;}
+
+  .settings-box{
+    margin-top:18px;
+    border:1.5px dashed var(--line);
+    border-radius:12px;
+    padding:12px 16px;
+    background:var(--paper);
+  }
+  .settings-box summary{
+    cursor:pointer;
+    font-size:13px;
+    font-weight:600;
+    color:var(--navy-deep);
+    list-style:none;
+  }
+  .settings-box summary::-webkit-details-marker{ display:none; }
+  .settings-box summary::before{ content:'⚙ '; }
+  .settings-note{
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin:8px 0 2px;
+  }
+
+  .submit-status{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:13.4px;
+    margin-top:26px;
+    border:1.5px solid var(--line);
+  }
+  .submit-status.sending{ background:#EEF1FB; border-color:#C7CFEE; color:var(--navy-deep); }
+  .submit-status.sent{ background:var(--teal-light); border-color:#C6E6DF; color:#0C5347; }
+  .submit-status.error{ background:#FBEAE6; border-color:#F0C6BB; color:#7A2A1D; }
+  .submit-status.nourl{ background:var(--paper); border-color:var(--line); color:var(--ink-soft); }
+  .submit-status .dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .submit-status.sending .dot{ background:var(--navy); animation:pulse 1.1s infinite; }
+  .submit-status.sent .dot{ background:var(--teal); }
+  .submit-status.error .dot{ background:var(--red); }
+  .submit-status.nourl .dot{ background:var(--ink-soft); }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .submit-status .msg b{ display:block; margin-bottom:1px; }
+  .submit-status button{
+    margin-left:auto;
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    background:none;
+    border:1.5px solid currentColor;
+    color:inherit;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+
+  /* Dimension header */
+  .dim-head{
+    display:flex; align-items:flex-start; gap:14px;
+    margin-bottom:22px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--line);
+  }
+  .dim-code{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:34px;
+    color:var(--ice);
+    -webkit-text-stroke:1.4px var(--navy);
+    line-height:1;
+    flex-shrink:0;
+    width:46px;
+  }
+  .dim-titles h2{
+    font-family:'Fraunces',serif;
+    font-size:22px;
+    margin:0 0 2px;
+    color:var(--navy-deep);
+  }
+  .dim-titles .en{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--teal);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-bottom:6px;
+  }
+  .dim-titles p{ margin:6px 0 0; font-size:13.6px; color:var(--ink-soft); line-height:1.5; }
+
+  /* Question item */
+  .qitem{
+    padding:18px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .qitem:last-child{ border-bottom:none; padding-bottom:2px; }
+  .qtext{
+    font-size:14.8px;
+    line-height:1.5;
+    color:var(--ink);
+    margin-bottom:12px;
+  }
+  .qtext .qno{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--teal);
+    font-weight:600;
+    margin-right:6px;
+    font-size:12.5px;
+  }
+  .segmented{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+  }
+  @media (max-width:520px){ .segmented{grid-template-columns:repeat(2,1fr); grid-template-rows:1fr 1fr;} }
+  .seg-btn{
+    border:1.5px solid var(--line);
+    background:var(--paper);
+    border-radius:10px;
+    padding:9px 6px;
+    text-align:center;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    transition:all .16s ease;
+    user-select:none;
+  }
+  .seg-btn .n{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:2px;
+    color:var(--navy);
+  }
+  .seg-btn:hover{ border-color:var(--teal); background:#fff; }
+  .seg-btn.sel{
+    background:var(--navy);
+    border-color:var(--navy);
+    color:#fff;
+  }
+  .seg-btn.sel .n{ color:var(--ice); }
+
+  .qitem.unanswered .qtext{ color:var(--red); }
+  .qitem.unanswered .segmented .seg-btn{ border-color:#EFC9C0; }
+
+  /* Nav buttons */
+  .nav-row{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:28px;
+  }
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    padding:11px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    border:1.5px solid transparent;
+    transition:all .15s ease;
+  }
+  .btn-primary{ background:var(--navy); color:#fff; }
+  .btn-primary:hover{ background:var(--navy-deep); }
+  .btn-ghost{ background:transparent; color:var(--navy); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--navy); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; }
+  .hint{ font-size:12px; color:var(--ink-soft); }
+
+  /* Results */
+  .result-top{
+    display:flex; gap:28px; align-items:center; flex-wrap:wrap;
+    margin-bottom:8px;
+  }
+  .radar-wrap{ flex-shrink:0; }
+  .overall-box{ flex:1; min-width:220px; }
+  .overall-cat{
+    font-family:'Fraunces',serif;
+    font-size:30px;
+    font-weight:700;
+    margin:2px 0 4px;
+  }
+  .overall-score{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  .cat-desc{ font-size:13.6px; color:var(--ink-soft); line-height:1.55; margin-top:8px; }
+
+  .dim-bars{ margin-top:26px; display:flex; flex-direction:column; gap:14px; }
+  .dim-bar-row{ display:flex; align-items:center; gap:14px; }
+  .dim-bar-label{ width:190px; flex-shrink:0; font-size:13px; font-weight:600; color:var(--navy-deep); }
+  .dim-bar-track{ flex:1; height:12px; background:var(--paper); border:1px solid var(--line); border-radius:7px; overflow:hidden; }
+  .dim-bar-fill{ height:100%; border-radius:7px; transition:width .6s ease; }
+  .dim-bar-pct{ width:52px; text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-soft); flex-shrink:0; }
+
+  .cat-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    font-weight:600;
+    padding:2px 8px;
+    border-radius:20px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+
+  .reflect-block{ margin-top:30px; }
+  .reflect-block h3{
+    font-family:'Fraunces',serif;
+    font-size:18px;
+    color:var(--navy-deep);
+    margin:0 0 4px;
+  }
+  .reflect-q{ font-size:13.6px; font-weight:600; margin:16px 0 6px; color:var(--ink); }
+  .reflect-block textarea{
+    width:100%;
+    min-height:64px;
+    font-family:'Inter',sans-serif;
+    font-size:13.6px;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1.5px solid var(--line);
+    background:var(--paper);
+    resize:vertical;
+    outline:none;
+  }
+  .reflect-block textarea:focus{ border-color:var(--teal); background:#fff; }
+
+  .final-actions{
+    display:flex; gap:12px; margin-top:30px; flex-wrap:wrap;
+  }
+
+  footer.credit{
+    text-align:center;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-top:26px;
+    line-height:1.6;
+  }
+
+  @media print{
+    body{ background:#fff; }
+    .rail, .nav-row, .final-actions{ display:none !important; }
+    .panel{ box-shadow:none; border:none; padding:0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ---------------- KONFIGURASI GOOGLE SHEETS ----------------
+   1. Ikuti panduan deployment Google Apps Script yang diberikan terpisah.
+   2. Setelah deploy, tempel URL Web App Anda (diawali https://script.google.com/macros/s/.../exec) di bawah ini.
+   3. URL juga bisa diisi/diganti langsung dari halaman pertama instrumen (tidak wajib edit kode).
+------------------------------------------------------------- */
+const GOOGLE_SCRIPT_URL_DEFAULT = "TEMPEL_URL_WEB_APP_ANDA_DI_SINI";
+
+/* ---------------- DATA ---------------- */
+const DIMENSIONS = [
+  {
+    code:'A', title:'Kecakapan Digital', en:'Digital Skills',
+    desc:'Kemampuan teknis mengoperasikan perangkat keras, perangkat lunak, dan sistem digital secara fungsional.',
+    color:'#1E2761',
+    items:[
+      'Saya mampu menghidupkan, mengatur, dan merawat komputer/laptop atau gawai yang saya gunakan.',
+      'Saya mampu menyambungkan perangkat ke internet (Wi-Fi/data seluler) secara mandiri.',
+      'Saya mampu menelusuri dan menemukan informasi yang relevan menggunakan mesin pencari.',
+      'Saya mampu membuat dan mengedit dokumen (Word/Google Docs) untuk keperluan administrasi atau bahan ajar.',
+      'Saya mampu membuat dan mengedit presentasi (PowerPoint/Google Slides) untuk pembelajaran.',
+      'Saya mampu mengolah data sederhana menggunakan lembar kerja (Excel/Google Sheets).',
+      'Saya mampu menggunakan surel (email) untuk berkomunikasi secara profesional.',
+      'Saya mampu menggunakan aplikasi pesan instan dan video-konferensi untuk berinteraksi dengan warga belajar.',
+      'Saya mampu menyimpan, membagikan, dan mengelola berkas melalui layanan penyimpanan awan (mis. Google Drive).',
+      'Saya mampu memanfaatkan platform pembelajaran (LMS) atau media digital untuk merancang dan menyampaikan pembelajaran.'
+    ]
+  },
+  {
+    code:'B', title:'Budaya Digital', en:'Digital Culture',
+    desc:'Menggunakan teknologi dengan wawasan kebangsaan, toleransi, dan tanggung jawab sosial.',
+    color:'#0F7B6C',
+    items:[
+      'Saya menggunakan teknologi digital dengan memperhatikan nilai kebangsaan dan keberagaman.',
+      'Saya terbiasa memeriksa kebenaran suatu informasi sebelum membagikannya kepada orang lain.',
+      'Saya mampu membedakan informasi faktual dengan hoaks/misinformasi di media digital.',
+      'Saya mendorong warga belajar untuk bersikap kritis terhadap informasi yang mereka terima secara daring.',
+      'Saya menggunakan bahasa yang santun dan menghargai perbedaan pendapat dalam interaksi digital.',
+      'Saya berkontribusi menyebarkan konten digital yang bermanfaat bagi komunitas sekitar.'
+    ]
+  },
+  {
+    code:'C', title:'Etika Digital', en:'Digital Ethics',
+    desc:'Menyadari, menimbang, dan bertindak benar dalam berinteraksi di ruang digital.',
+    color:'#B8862E',
+    items:[
+      'Saya memahami pentingnya etika (netiket) dalam berkomunikasi di ruang digital.',
+      'Saya meminta izin sebelum membagikan data, foto, atau video orang lain di media digital.',
+      'Saya mencantumkan sumber/atribusi saat menggunakan karya orang lain agar terhindar dari plagiarisme digital.',
+      'Saya tidak terlibat dalam perundungan siber (cyberbullying) atau ujaran kebencian secara daring.',
+      'Saya membahas dilema etika digital bersama warga belajar dalam proses pembelajaran.',
+      'Saya menyusun atau menerapkan kesepakatan perilaku digital (netiket kelas) bersama warga belajar.',
+      'Saya bertanggung jawab atas dampak dari konten yang saya bagikan secara daring.'
+    ]
+  },
+  {
+    code:'D', title:'Keamanan Digital', en:'Digital Security',
+    desc:'Melindungi diri, data, dan perangkat dari ancaman dan penyalahgunaan di ruang siber.',
+    color:'#A3402F',
+    items:[
+      'Saya menggunakan kata sandi yang kuat dan berbeda untuk setiap akun penting.',
+      'Saya mengaktifkan verifikasi dua langkah (2FA) pada akun-akun penting saya.',
+      'Saya mampu mengenali ciri-ciri tautan atau pesan phishing/penipuan digital.',
+      'Saya berhati-hati saat mengunduh atau membuka berkas (termasuk file APK) dari sumber yang tidak dikenal.',
+      'Saya rutin memperbarui (update) perangkat lunak dan aplikasi untuk mencegah celah keamanan.',
+      'Saya memahami cara melindungi data pribadi saya dan warga belajar sesuai UU Pelindungan Data Pribadi (UU PDP).',
+      'Saya mengajarkan warga belajar cara mengenali dan menghindari modus penipuan digital.',
+      'Saya memiliki kebiasaan mencadangkan (backup) data penting secara berkala.'
+    ]
+  }
+];
+
+const SCALE = [
+  {v:1, lbl:'Belum Mampu', desc:'Belum pernah/belum bisa melakukan sama sekali.'},
+  {v:2, lbl:'Kurang Mampu', desc:'Sesekali, masih sering dibantu orang lain.'},
+  {v:3, lbl:'Mampu', desc:'Cukup lancar melakukannya secara mandiri.'},
+  {v:4, lbl:'Sangat Mampu', desc:'Selalu dan sangat lancar secara mandiri.'}
+];
+
+function categoryOf(pct){
+  if(pct <= 25) return {name:'Sangat Rendah', color:'#A3402F', bg:'#FBEAE6', desc:'Belum menguasai sebagian besar aspek; sangat memerlukan pendampingan intensif.'};
+  if(pct <= 50) return {name:'Rendah', color:'#B8862E', bg:'#FBF1DF', desc:'Menguasai sebagian kecil aspek; masih memerlukan pelatihan dan latihan terbimbing.'};
+  if(pct <= 75) return {name:'Sedang', color:'#1E2761', bg:'#E9EBF7', desc:'Menguasai sebagian besar aspek dasar; perlu penguatan pada aspek tertentu agar lebih mandiri.'};
+  return {name:'Tinggi', color:'#0F7B6C', bg:'#E4F3F0', desc:'Menguasai hampir seluruh aspek dan mampu menjadi teladan/agen literasi digital bagi warga belajar.'};
+}
+
+/* ---------------- STATE ---------------- */
+const state = {
+  step: 0, // 0 = intro, 1..4 = dims, 5 = results
+  respondent: { nama:'', instansi:'', jabatan:'', masa:'' },
+  answers: {}, // key "A-0" -> value 1..4
+  reflect: { r1:'', r2:'', r3:'' },
+  attemptedNext: false,
+  sheetUrl: GOOGLE_SCRIPT_URL_DEFAULT,
+  submitStatus: 'idle' // idle | sending | sent | error | nourl
+};
+
+const totalSteps = DIMENSIONS.length + 2; // intro + 4 dims + results
+
+/* ---------------- RENDER HELPERS ---------------- */
+const app = document.getElementById('app');
+
+function render(){
+  app.innerHTML = '';
+  app.appendChild(renderHeader());
+  app.appendChild(renderRail());
+  if(state.step === 0) app.appendChild(renderIntro());
+  else if(state.step >= 1 && state.step <= DIMENSIONS.length) app.appendChild(renderDimension(DIMENSIONS[state.step-1]));
+  else app.appendChild(renderResults());
+  const foot = document.createElement('footer');
+  foot.className = 'credit';
+  foot.innerHTML = 'Instrumen Self-Assessment Literasi Digital Pamong Belajar &middot; Pengabdian kepada Masyarakat, Kabupaten Bandung &middot; 2026<br/>Mengacu Kerangka Empat Pilar Literasi Digital (Komdigi&ndash;Japelidi, 2021) &amp; UNESCO Digital Literacy Global Framework (Law dkk., 2018)';
+  app.appendChild(foot);
+}
+
+function renderHeader(){
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <div class="eyebrow">Pengabdian kepada Masyarakat &middot; Kabupaten Bandung</div>
+    <h1 class="title">Instrumen Self-Assessment<br/>Literasi Digital Pamong Belajar</h1>
+    <p class="subtitle">Refleksi mandiri atas empat pilar literasi digital &mdash; kecakapan, budaya, etika, dan keamanan &mdash; untuk pamong belajar SKB, SPNF, dan PKBM.</p>
+  `;
+  return div;
+}
+
+function renderRail(){
+  const rail = document.createElement('div');
+  rail.className = 'rail';
+  const labels = ['Identitas', ...DIMENSIONS.map(d=>d.code), 'Hasil'];
+  labels.forEach((lbl, i)=>{
+    if(i>0){
+      const c = document.createElement('div');
+      c.className='rail-connector';
+      rail.appendChild(c);
+    }
+    const s = document.createElement('div');
+    s.className = 'rail-step' + (i===state.step?' active':'') + (i<state.step?' done':'');
+    s.innerHTML = `<span class="rail-dot">${i<state.step? '✓' : (i===0?'•':(i===labels.length-1?'★':lbl))}</span><span class="rail-label">${i===0?'Identitas':(i===labels.length-1?'Hasil':'Dimensi '+lbl)}</span>`;
+    s.style.cursor = i<=maxReachable() ? 'pointer' : 'default';
+    s.onclick = ()=>{ if(i<=maxReachable()){ state.step=i; render(); window.scrollTo({top:0,behavior:'smooth'}); } };
+    rail.appendChild(s);
+  });
+  return rail;
+}
+
+function maxReachable(){
+  // allow navigating back freely; forward only if answered so far (loosely: allow same as current)
+  return state.step;
+}
+
+function renderIntro(){
+  const panel = document.createElement('div');
+  panel.className = 'panel';
+  panel.innerHTML = `
+    <div class="dim-titles" style="margin-bottom:4px;">
+      <div class="en">Mulai Pengisian</div>
+      <h2 style="margin-bottom:6px;">Identitas Responden</h2>
+      <p>Isian ini bersifat opsional namun membantu rekapitulasi hasil pengabdian.</p>
+    </div>
+    <div class="field-grid">
+      <div class="field"><label>Nama</label><input id="f-nama" type="text" placeholder="Nama lengkap" /></div>
+      <div class="field"><label>Instansi (SKB/SPNF/PKBM)</label><input id="f-instansi" type="text" placeholder="Nama lembaga" /></div>
+      <div class="field"><label>Jabatan / Tugas Pokok</label><input id="f-jabatan" type="text" placeholder="mis. Pamong Belajar Ahli Muda" /></div>
+      <div class="field"><label>Masa Kerja sebagai Pamong Belajar</label><input id="f-masa" type="text" placeholder="mis. 5 tahun" /></div>
+    </div>
+    <div class="intro-note">
+      <b>Petunjuk pengisian.</b> Instrumen ini bersifat reflektif, bukan penilaian benar-salah &mdash; isilah dengan jujur sesuai kondisi Bapak/Ibu saat ini. Setiap pernyataan dijawab dengan salah satu dari empat pilihan berikut.
+    </div>
+    <div class="scale-legend">
+      ${SCALE.map(s=>`<div class="scale-chip"><div class="num">SKOR ${s.v}</div><div class="lbl">${s.lbl}</div><div class="desc">${s.desc}</div></div>`).join('')}
+    </div>
+    <details class="settings-box">
+      <summary>Pengaturan pengiriman ke Google Sheets ${state.sheetUrl && state.sheetUrl.indexOf('TEMPEL_URL')===-1 ? '<span class="cat-tag" style="color:#0F7B6C;background:#E4F3F0;">terhubung</span>' : '<span class="cat-tag" style="color:#B8862E;background:#FBF1DF;">belum diatur</span>'}</summary>
+      <div class="field" style="margin-top:12px;">
+        <label>URL Google Apps Script (Web App)</label>
+        <input id="f-sheeturl" type="text" placeholder="https://script.google.com/macros/s/.../exec" />
+      </div>
+      <p class="settings-note">Hasil pengisian akan otomatis terkirim ke Google Sheets Anda setelah instrumen ini selesai diisi. Kosongkan bila belum ingin menghubungkan.</p>
+    </details>
+    <div class="nav-row">
+      <span class="hint">31 pernyataan &middot; sekitar 8&ndash;10 menit</span>
+      <button class="btn btn-primary" id="btn-start">Mulai Pengisian &nbsp;→</button>
+    </div>
+  `;
+  panel.querySelector('#f-nama').value = state.respondent.nama;
+  panel.querySelector('#f-instansi').value = state.respondent.instansi;
+  panel.querySelector('#f-jabatan').value = state.respondent.jabatan;
+  panel.querySelector('#f-masa').value = state.respondent.masa;
+  panel.querySelector('#f-nama').oninput = e=> state.respondent.nama = e.target.value;
+  panel.querySelector('#f-instansi').oninput = e=> state.respondent.instansi = e.target.value;
+  panel.querySelector('#f-jabatan').oninput = e=> state.respondent.jabatan = e.target.value;
+  panel.querySelector('#f-masa').oninput = e=> state.respondent.masa = e.target.value;
+  const sheetInput = panel.querySelector('#f-sheeturl');
+  sheetInput.value = (state.sheetUrl && state.sheetUrl.indexOf('TEMPEL_URL')===-1) ? state.sheetUrl : '';
+  const badge = panel.querySelector('.settings-box summary .cat-tag');
+  sheetInput.oninput = e=> {
+    state.sheetUrl = e.target.value.trim();
+    const connected = state.sheetUrl && state.sheetUrl.indexOf('TEMPEL_URL') === -1 && state.sheetUrl.length > 0;
+    badge.textContent = connected ? 'terhubung' : 'belum diatur';
+    badge.style.color = connected ? '#0F7B6C' : '#B8862E';
+    badge.style.background = connected ? '#E4F3F0' : '#FBF1DF';
+  };
+  panel.querySelector('#btn-start').onclick = ()=>{ state.step = 1; state.attemptedNext=false; render(); window.scrollTo({top:0,behavior:'smooth'}); };
+  return panel;
+}
+
+function renderDimension(dim){
+  const panel = document.createElement('div');
+  panel.className = 'panel';
+
+  const head = document.createElement('div');
+  head.className = 'dim-head';
+  head.innerHTML = `
+    <div class="dim-code" style="-webkit-text-stroke-color:${dim.color}">${dim.code}</div>
+    <div class="dim-titles">
+      <div class="en">${dim.en}</div>
+      <h2>${dim.title}</h2>
+      <p>${dim.desc}</p>
+    </div>
+  `;
+  panel.appendChild(head);
+
+  dim.items.forEach((text, idx)=>{
+    const key = dim.code + '-' + idx;
+    const globalNo = DIMENSIONS.slice(0, DIMENSIONS.indexOf(dim)).reduce((s,d)=>s+d.items.length,0) + idx + 1;
+    const qwrap = document.createElement('div');
+    const unanswered = state.attemptedNext && !state.answers[key];
+    qwrap.className = 'qitem' + (unanswered?' unanswered':'');
+    qwrap.innerHTML = `
+      <div class="qtext"><span class="qno">${String(globalNo).padStart(2,'0')}</span>${text}</div>
+      <div class="segmented">
+        ${SCALE.map(s=>`<div class="seg-btn ${state.answers[key]===s.v?'sel':''}" data-v="${s.v}"><span class="n">${s.v}</span>${s.lbl}</div>`).join('')}
+      </div>
+    `;
+    qwrap.querySelectorAll('.seg-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        state.answers[key] = parseInt(btn.dataset.v);
+        render();
+      };
+    });
+    panel.appendChild(qwrap);
+  });
+
+  const nav = document.createElement('div');
+  nav.className = 'nav-row';
+  const answeredCount = dim.items.filter((_,idx)=>state.answers[dim.code+'-'+idx]).length;
+  nav.innerHTML = `
+    <button class="btn btn-ghost" id="btn-back">← Kembali</button>
+    <span class="hint">${answeredCount} / ${dim.items.length} terjawab</span>
+    <button class="btn btn-primary" id="btn-next">${state.step===DIMENSIONS.length? 'Lihat Hasil →' : 'Lanjut →'}</button>
+  `;
+  panel.appendChild(nav);
+
+  panel.querySelector('#btn-back').onclick = ()=>{ state.step -=1; state.attemptedNext=false; render(); window.scrollTo({top:0,behavior:'smooth'}); };
+  panel.querySelector('#btn-next').onclick = ()=>{
+    const allAnswered = dim.items.every((_,idx)=>state.answers[dim.code+'-'+idx]);
+    if(!allAnswered){ state.attemptedNext = true; render(); 
+      const firstUn = panel.querySelector('.qitem.unanswered');
+      if(firstUn) firstUn.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    state.attemptedNext = false;
+    state.step += 1;
+    render();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  return panel;
+}
+
+function computeScores(){
+  return DIMENSIONS.map(dim=>{
+    const max = dim.items.length*4;
+    const score = dim.items.reduce((s,_,idx)=> s + (state.answers[dim.code+'-'+idx]||0), 0);
+    const pct = Math.round((score/max)*100);
+    return {code:dim.code, title:dim.title, color:dim.color, score, max, pct};
+  });
+}
+
+function renderRadar(scores){
+  const size = 260, cx=size/2, cy=size/2, maxR = 96;
+  const n = scores.length;
+  function pt(i, r){
+    const angle = (-90 + i*(360/n)) * Math.PI/180;
+    return [cx + r*Math.cos(angle), cy + r*Math.sin(angle)];
+  }
+  let grid = '';
+  [0.25,0.5,0.75,1].forEach(f=>{
+    const pts = scores.map((_,i)=>pt(i, maxR*f).join(',')).join(' ');
+    grid += `<polygon points="${pts}" fill="none" stroke="#DFE2EE" stroke-width="1"/>`;
+  });
+  scores.forEach((_,i)=>{
+    const [x,y] = pt(i, maxR);
+    grid += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DFE2EE" stroke-width="1"/>`;
+  });
+  const dataPts = scores.map((s,i)=> pt(i, maxR*(s.pct/100)).join(',')).join(' ');
+  let labels = '';
+  scores.forEach((s,i)=>{
+    const [x,y] = pt(i, maxR+26);
+    labels += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="600" fill="${s.color}">${s.code}</text>`;
+  });
+  return `
+  <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    ${grid}
+    <polygon points="${dataPts}" fill="#1E2761" fill-opacity="0.16" stroke="#1E2761" stroke-width="2.2"/>
+    ${scores.map((s,i)=>{const [x,y]=pt(i,maxR*(s.pct/100)); return `<circle cx="${x}" cy="${y}" r="4" fill="${s.color}" />`;}).join('')}
+    ${labels}
+  </svg>`;
+}
+
+function buildPayload(scores, totalScore, totalMax, totalPct, overallCat){
+  const jawaban = {};
+  DIMENSIONS.forEach(dim=> dim.items.forEach((_,idx)=>{
+    const key = dim.code+'-'+idx;
+    jawaban[key] = state.answers[key] || null;
+  }));
+  const byCode = c => scores.find(s=>s.code===c);
+  return {
+    nama: state.respondent.nama,
+    instansi: state.respondent.instansi,
+    jabatan: state.respondent.jabatan,
+    masaKerja: state.respondent.masa,
+    skorA: byCode('A').score, persenA: byCode('A').pct, kategoriA: categoryOf(byCode('A').pct).name,
+    skorB: byCode('B').score, persenB: byCode('B').pct, kategoriB: categoryOf(byCode('B').pct).name,
+    skorC: byCode('C').score, persenC: byCode('C').pct, kategoriC: categoryOf(byCode('C').pct).name,
+    skorD: byCode('D').score, persenD: byCode('D').pct, kategoriD: categoryOf(byCode('D').pct).name,
+    skorTotal: totalScore, persenTotal: totalPct, kategoriTotal: overallCat.name,
+    refleksi1: state.reflect.r1, refleksi2: state.reflect.r2, refleksi3: state.reflect.r3,
+    jawaban: jawaban
+  };
+}
+
+function submitToSheet(payload){
+  if(!state.sheetUrl || state.sheetUrl.indexOf('TEMPEL_URL') !== -1){
+    state.submitStatus = 'nourl';
+    render();
+    return;
+  }
+  if(typeof fetch !== 'function'){
+    state.submitStatus = 'error';
+    render();
+    return;
+  }
+  state.submitStatus = 'sending';
+  render();
+  try{
+    fetch(state.sheetUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(()=>{
+      state.submitStatus = 'sent';
+      render();
+    }).catch(()=>{
+      state.submitStatus = 'error';
+      render();
+    });
+  }catch(err){
+    state.submitStatus = 'error';
+    render();
+  }
+}
+
+function renderResults(){
+  const panel = document.createElement('div');
+  panel.className = 'panel';
+
+  const scores = computeScores();
+  const totalScore = scores.reduce((s,d)=>s+d.score,0);
+  const totalMax = scores.reduce((s,d)=>s+d.max,0);
+  const totalPct = Math.round((totalScore/totalMax)*100);
+  const overallCat = categoryOf(totalPct);
+
+  const top = document.createElement('div');
+  top.className = 'result-top';
+  top.innerHTML = `
+    <div class="radar-wrap">${renderRadar(scores)}</div>
+    <div class="overall-box">
+      <div class="eyebrow" style="margin-bottom:2px;">Hasil Keseluruhan${state.respondent.nama? ' &middot; '+state.respondent.nama : ''}</div>
+      <div class="overall-cat" style="color:${overallCat.color}">${overallCat.name}</div>
+      <div class="overall-score">Skor total ${totalScore} / ${totalMax} &nbsp;(${totalPct}%)</div>
+      <div class="cat-desc">${overallCat.desc}</div>
+    </div>
+  `;
+  panel.appendChild(top);
+
+  const bars = document.createElement('div');
+  bars.className = 'dim-bars';
+  scores.forEach(s=>{
+    const cat = categoryOf(s.pct);
+    const row = document.createElement('div');
+    row.className = 'dim-bar-row';
+    row.innerHTML = `
+      <div class="dim-bar-label">${s.code}. ${s.title}<span class="cat-tag" style="color:${cat.color};background:${cat.bg}">${cat.name}</span></div>
+      <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${s.pct}%; background:${s.color}"></div></div>
+      <div class="dim-bar-pct">${s.pct}%</div>
+    `;
+    bars.appendChild(row);
+  });
+  panel.appendChild(bars);
+
+  const reflect = document.createElement('div');
+  reflect.className = 'reflect-block';
+  reflect.innerHTML = `
+    <h3>Refleksi &amp; Rencana Tindak Lanjut</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0;">Opsional &mdash; gunakan hasil di atas untuk merancang langkah nyata.</p>
+    <div class="reflect-q">1. Dimensi manakah yang paling perlu saya tingkatkan?</div>
+    <textarea id="r1" placeholder="Tuliskan refleksi Anda..."></textarea>
+    <div class="reflect-q">2. Langkah konkret dalam tiga bulan ke depan untuk meningkatkan kapasitas digital saya:</div>
+    <textarea id="r2" placeholder="Tuliskan rencana Anda..."></textarea>
+    <div class="reflect-q">3. Bagaimana saya akan menularkan literasi digital yang aman &amp; beretika kepada warga belajar?</div>
+    <textarea id="r3" placeholder="Tuliskan strategi Anda..."></textarea>
+  `;
+  panel.appendChild(reflect);
+  reflect.querySelector('#r1').value = state.reflect.r1;
+  reflect.querySelector('#r2').value = state.reflect.r2;
+  reflect.querySelector('#r3').value = state.reflect.r3;
+  reflect.querySelector('#r1').oninput = e=> state.reflect.r1 = e.target.value;
+  reflect.querySelector('#r2').oninput = e=> state.reflect.r2 = e.target.value;
+  reflect.querySelector('#r3').oninput = e=> state.reflect.r3 = e.target.value;
+
+  const actions = document.createElement('div');
+  actions.className = 'final-actions';
+  actions.innerHTML = `
+    <button class="btn btn-ghost" id="btn-back-results">← Kembali ke Pernyataan</button>
+    <button class="btn btn-primary" id="btn-print">Cetak / Simpan sebagai PDF</button>
+    <button class="btn btn-ghost" id="btn-reset">Ulangi Pengisian</button>
+  `;
+  panel.appendChild(actions);
+  actions.querySelector('#btn-back-results').onclick = ()=>{ state.step = DIMENSIONS.length; render(); window.scrollTo({top:0,behavior:'smooth'}); };
+  actions.querySelector('#btn-print').onclick = ()=> window.print();
+  actions.querySelector('#btn-reset').onclick = ()=>{
+    if(confirm('Ulangi pengisian dari awal? Semua jawaban akan dihapus.')){
+      state.step = 0; state.answers = {}; state.reflect = {r1:'',r2:'',r3:''}; state.attemptedNext=false; state.submitStatus='idle';
+      render(); window.scrollTo({top:0,behavior:'smooth'});
+    }
+  };
+
+  const payload = buildPayload(scores, totalScore, totalMax, totalPct, overallCat);
+
+  const statusBox = document.createElement('div');
+  statusBox.className = 'submit-status ' + state.submitStatus;
+  const map = {
+    idle: {msg:'<b>Menyiapkan pengiriman…</b>'},
+    sending: {msg:'<b>Mengirim ke Google Sheets…</b>Mohon tunggu sebentar.'},
+    sent: {msg:'<b>Terkirim.</b>Hasil telah dikirim ke Google Sheets. Silakan periksa sheet untuk memastikan baris baru sudah muncul.'},
+    error: {msg:'<b>Gagal mengirim.</b>Periksa koneksi internet Anda, lalu coba kirim ulang.'},
+    nourl: {msg:'<b>Belum terhubung ke Google Sheets.</b>Atur URL Apps Script pada halaman Identitas bila ingin hasil tersimpan otomatis.'}
+  };
+  const info = map[state.submitStatus] || map.idle;
+  statusBox.innerHTML = `<span class="dot"></span><span class="msg">${info.msg}</span>` + (state.submitStatus==='error' ? '<button id="btn-retry">Kirim Ulang</button>' : '');
+  panel.appendChild(statusBox);
+  if(state.submitStatus==='error'){
+    statusBox.querySelector('#btn-retry').onclick = ()=> submitToSheet(payload);
+  }
+
+  if(state.submitStatus === 'idle'){
+    setTimeout(()=> submitToSheet(payload), 0);
+  }
+
+  return panel;
+}
+
+render();
+</script>
+</body>
+</html>
